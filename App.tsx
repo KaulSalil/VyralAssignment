@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -15,6 +15,8 @@ import {
   Text,
   useColorScheme,
   View,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -25,42 +27,49 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
+  const [data, setData] = useState([
+    {id: '1', text: 'Item 1', checked: false},
+    {id: '2', text: 'Item 2', checked: false},
+    {id: '3', text: 'Item 3', checked: false},
+    // Add more items as needed
+  ]);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleLongPress = id => {
+    const newSelectedItems = [...selectedItems, id];
+    setSelectedItems(newSelectedItems);
+  };
+
+  const handleCheckBoxPress = id => {
+    const newSelectedItems = selectedItems.includes(id)
+      ? selectedItems.filter(item => item.id !== id)
+      : [...selectedItems, id];
+    setSelectedItems(...newSelectedItems);
+  };
+
+  const renderItem = ({item}) => (
+    <TouchableOpacity
+      style={[
+        styles.itemContainer,
+        selectedItems.includes(item.id) && styles.selectedItem,
+      ]}
+      onLongPress={() => handleLongPress(item.id)}>
+      <Text style={styles.itemText}>{item.text}</Text>
+      {selectedItems.includes(item.id) && (
+        <TouchableOpacity
+          style={styles.checkBox}
+          onPress={() => handleCheckBoxPress(item.id)}>
+          <Text>✓</Text>
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -68,30 +77,11 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
     </SafeAreaView>
   );
 }
@@ -112,6 +102,30 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  container: {
+    flex: 1,
+    marginTop: 50,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  selectedItem: {
+    backgroundColor: '#e0e0e0',
+  },
+  itemText: {
+    fontSize: 18,
+  },
+  checkBox: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    borderRadius: 5,
   },
 });
 
