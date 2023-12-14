@@ -5,6 +5,7 @@
  * @format
  */
 
+import CheckBox from '@react-native-community/checkbox';
 import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -40,13 +41,20 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   const [selectedItems, setSelectedItems] = useState([]);
-
   const handleLongPress = id => {
     const newSelectedItems = [...selectedItems, id];
     setSelectedItems(newSelectedItems);
   };
 
   const handleCheckBoxPress = id => {
+    const newSelectedItems = selectedItems.includes(id)
+      ? selectedItems.filter(item => item !== id)
+      : [...selectedItems, id];
+
+    setSelectedItems(newSelectedItems);
+  };
+
+  const onCheckBoxChanges = id => {
     const newSelectedItems = selectedItems.includes(id)
       ? selectedItems.filter(item => item !== id)
       : [...selectedItems, id];
@@ -62,13 +70,12 @@ function App(): React.JSX.Element {
       ]}
       onLongPress={() => handleLongPress(item.id)}>
       <Text style={styles.itemText}>{item.text}</Text>
-      {selectedItems.includes(item.id) && (
-        <TouchableOpacity
-          style={styles.checkBox}
-          onPress={() => handleCheckBoxPress(item.id)}>
-          <Text>✓</Text>
-        </TouchableOpacity>
-      )}
+      {selectedItems.length > 0 ? (
+        <CheckBox
+          value={selectedItems.includes(item.id) ? true : false}
+          onValueChange={() => onCheckBoxChanges(item.id)}
+        />
+      ) : null}
     </TouchableOpacity>
   );
 
