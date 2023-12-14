@@ -18,15 +18,21 @@ import {
   useRecoilValue,
 } from 'recoil';
 
+const userState = atom({
+  key: 'userState', // unique ID (with respect to other atoms/selectors)
+  default: [], // default value (aka initial value)
+});
 function App(): React.JSX.Element {
-  const [data, setData] = useState([
-    {id: '1', text: 'Item 1', checked: false},
-    {id: '2', text: 'Item 2', checked: false},
-    {id: '3', text: 'Item 3', checked: false},
-    // Add more items as needed
-  ]);
+  const [users, setUsers] = useRecoilState(userState);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch('https://dummyjson.com/users')
+        .then(res => res.json())
+        .then(res => setUsers(res));
+    };
+    fetchData();
+  }, []);
 
   const [selectedItems, setSelectedItems] = useState([]);
   const bottomSheetRef = useRef(null);
@@ -70,11 +76,11 @@ function App(): React.JSX.Element {
   );
 
   return (
-    <RecoilRoot>
-      <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <RecoilRoot>
         <View style={styles.container}>
           <FlatList
-            data={data}
+            data={users}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />
@@ -90,8 +96,8 @@ function App(): React.JSX.Element {
             </BottomSheet>
           ) : null}
         </View>
-      </GestureHandlerRootView>
-    </RecoilRoot>
+      </RecoilRoot>
+    </GestureHandlerRootView>
   );
 }
 
