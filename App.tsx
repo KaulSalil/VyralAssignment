@@ -6,18 +6,18 @@
  */
 
 import CheckBox from '@react-native-community/checkbox';
-import React, {useState} from 'react';
+import React, {useState, useRef, useMemo, useCallback} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+  Modal,
   StyleSheet,
   Text,
   useColorScheme,
   View,
   FlatList,
   TouchableOpacity,
+  Alert,
+  Pressable,
 } from 'react-native';
 
 import {
@@ -27,6 +27,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState([
@@ -35,12 +37,17 @@ function App(): React.JSX.Element {
     {id: '3', text: 'Item 3', checked: false},
     // Add more items as needed
   ]);
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
   const [selectedItems, setSelectedItems] = useState([]);
+  const bottomSheetRef = useRef(null);
+
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   const handleLongPress = id => {
     const newSelectedItems = [...selectedItems, id];
     setSelectedItems(newSelectedItems);
@@ -50,12 +57,13 @@ function App(): React.JSX.Element {
     const newSelectedItems = selectedItems.includes(id)
       ? selectedItems.filter(item => item !== id)
       : [...selectedItems, id];
-
+    if (newSelectedItems.length === 0) {
+    }
     setSelectedItems(newSelectedItems);
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity
+    <Pressable
       style={[
         styles.itemContainer,
         selectedItems.includes(item.id) && styles.selectedItem,
@@ -68,17 +76,30 @@ function App(): React.JSX.Element {
           onValueChange={() => onCheckBoxChanges(item.id)}
         />
       ) : null}
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </View>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+        {selectedItems.length > 0 ? (
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}>
+            <View style={styles.contentContainer}>
+              <Text>Awesome 🎉</Text>
+            </View>
+          </BottomSheet>
+        ) : null}
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -122,6 +143,51 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     padding: 10,
     borderRadius: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
 
