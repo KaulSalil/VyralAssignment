@@ -7,26 +7,7 @@
 
 import CheckBox from '@react-native-community/checkbox';
 import React, {useState, useRef, useMemo, useCallback} from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  Pressable,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {StyleSheet, Text, View, FlatList, Pressable} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 
