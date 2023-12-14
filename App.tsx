@@ -46,14 +46,6 @@ function App(): React.JSX.Element {
     setSelectedItems(newSelectedItems);
   };
 
-  const handleCheckBoxPress = id => {
-    const newSelectedItems = selectedItems.includes(id)
-      ? selectedItems.filter(item => item !== id)
-      : [...selectedItems, id];
-
-    setSelectedItems(newSelectedItems);
-  };
-
   const onCheckBoxChanges = id => {
     const newSelectedItems = selectedItems.includes(id)
       ? selectedItems.filter(item => item !== id)
