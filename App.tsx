@@ -48,9 +48,10 @@ function App(): React.JSX.Element {
 
   const handleCheckBoxPress = id => {
     const newSelectedItems = selectedItems.includes(id)
-      ? selectedItems.filter(item => item.id !== id)
+      ? selectedItems.filter(item => item !== id)
       : [...selectedItems, id];
-    setSelectedItems(...newSelectedItems);
+
+    setSelectedItems(newSelectedItems);
   };
 
   const renderItem = ({item}) => (
@@ -72,17 +73,13 @@ function App(): React.JSX.Element {
   );
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <View style={styles.container}>
       <FlatList
         data={data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
