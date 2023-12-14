@@ -6,10 +6,17 @@
  */
 
 import CheckBox from '@react-native-community/checkbox';
-import React, {useState, useRef, useMemo, useCallback} from 'react';
+import React, {useState, useRef, useMemo, useCallback, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList, Pressable} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState([
@@ -19,10 +26,12 @@ function App(): React.JSX.Element {
     // Add more items as needed
   ]);
 
+  useEffect(() => {}, []);
+
   const [selectedItems, setSelectedItems] = useState([]);
   const bottomSheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const snapPoints = useMemo(() => ['25%', '25%'], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
@@ -61,26 +70,28 @@ function App(): React.JSX.Element {
   );
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <View style={styles.container}>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-        {selectedItems.length > 0 ? (
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}>
-            <View style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
-            </View>
-          </BottomSheet>
-        ) : null}
-      </View>
-    </GestureHandlerRootView>
+    <RecoilRoot>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <View style={styles.container}>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+          {selectedItems.length > 0 ? (
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={1}
+              snapPoints={snapPoints}
+              onChange={handleSheetChanges}>
+              <View style={styles.contentContainer}>
+                <Text>Awesome 🎉</Text>
+              </View>
+            </BottomSheet>
+          ) : null}
+        </View>
+      </GestureHandlerRootView>
+    </RecoilRoot>
   );
 }
 
