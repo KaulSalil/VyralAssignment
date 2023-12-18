@@ -67,29 +67,33 @@ function App(): React.JSX.Element {
       <Pressable
         style={[
           styles.itemContainer,
+          styles.shadowProp,
           selectedItems.includes(item.id) && styles.selectedItem,
         ]}
         onLongPress={() => handleLongPress(item.id)}>
         <View style={{flexDirection: 'row'}}>
-          <Image
-            style={{height: 30, width: 30, borderRadius: 30 / 2}}
-            source={{uri: item.image}}
-          />
+          <View style={{flexDirection: 'column'}}>
+            <Image
+              style={{height: 60, width: 60, borderRadius: 60 / 2}}
+              source={{uri: item.image}}
+            />
+            {selectedItems.length > 0 ? (
+              <CheckBox
+                style={{marginTop: -54}}
+                value={selectedItems.includes(item.id) ? true : false}
+                onValueChange={() => onCheckBoxChanges(item.id)}
+                tintColor="#6C63FF"
+                onCheckColor='"#6C63FF"'
+                tintColors={{true: '#6C63FF', false: '#6C63FF'}}
+              />
+            ) : null}
+          </View>
+
           <View style={{flexDirection: 'column'}}>
             <Text style={styles.itemText}>{item.firstName}</Text>
             <Text style={styles.itemText}>{item.address.address}</Text>
           </View>
         </View>
-
-        {selectedItems.length > 0 ? (
-          <CheckBox
-            value={selectedItems.includes(item.id) ? true : false}
-            onValueChange={() => onCheckBoxChanges(item.id)}
-            tintColor="#6C63FF"
-            onCheckColor='"#6C63FF"'
-            tintColors={{true: '#6C63FF', false: '#6C63FF'}}
-          />
-        ) : null}
       </Pressable>
     );
   };
@@ -155,18 +159,6 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 24,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
   container: {
     flex: 1,
     marginTop: 10,
@@ -174,7 +166,6 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     backgroundColor: 'white',
-    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -185,24 +176,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   selectedItem: {
-    backgroundColor: '#e0e0e0',
     borderColor: '#6C63FF',
     borderWidth: 3,
   },
   itemText: {
     fontSize: 18,
-  },
-  checkBox: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    borderRadius: 5,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -242,6 +220,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 10,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
 });
 
