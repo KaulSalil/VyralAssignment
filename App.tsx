@@ -91,6 +91,39 @@ function App(): React.JSX.Element {
     );
   };
 
+  const renderBottomSheetContents = () => {
+    console.log(`selectedItems:${JSON.stringify(selectedItems)}`);
+    if (selectedItems.length === 1) {
+      console.log(susers.find(item => item.id === selectedItems[0]).firstName);
+    } else {
+      console.log(
+        susers.find(item => item.id === selectedItems[0]).firstName +
+          '---' +
+          susers.find(item => item.id === selectedItems[1]).firstName,
+      );
+    }
+    return <Text>{selectedItems.length}</Text>;
+    // switch (selectedItems.length) {
+    //   case 0:
+    //     return (
+    //       <>
+    //         <Text>{susers[selectedItems[0]].firstName}</Text>
+    //         <Text>{susers[selectedItems[0]].firstName}+s Friends</Text>
+    //       </>
+    //     );
+    //   default:
+    //     return (
+    //       <>
+    //         <Text>
+    //           {susers[selectedItems[0].firstName]},
+    //           {susers[selectedItems[1].firstName]}
+    //         </Text>
+    //         <Text>Their Friends</Text>
+    //       </>
+    //     );
+    // }
+  };
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <View style={styles.container}>
@@ -108,7 +141,8 @@ function App(): React.JSX.Element {
             snapPoints={snapPoints}
             onChange={handleSheetChanges}>
             <View style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
+              <Text>Hang With</Text>
+              {renderBottomSheetContents()}
             </View>
           </BottomSheet>
         ) : null}
