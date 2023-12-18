@@ -7,7 +7,15 @@
 
 import CheckBox from '@react-native-community/checkbox';
 import React, {useState, useRef, useMemo, useCallback, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList, Pressable, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Pressable,
+  Image,
+  Button,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 
@@ -94,6 +102,16 @@ function App(): React.JSX.Element {
             <Text style={styles.itemText}>{item.address.address}</Text>
           </View>
         </View>
+        <Text
+          style={{
+            height: 40,
+            width: 60,
+            backgroundColor: '#6C63FF',
+            borderRadius: 10,
+            textAlign: 'center',
+          }}>
+          Classify
+        </Text>
       </Pressable>
     );
   };
