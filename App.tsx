@@ -10,26 +10,29 @@ import React, {useState, useRef, useMemo, useCallback, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList, Pressable} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
+// import {
+//   RecoilRoot,
+//   atom,
+//   selector,
+//   useRecoilState,
+//   useRecoilValue,
+// } from 'recoil';
 
-const userState = atom({
-  key: 'userState', // unique ID (with respect to other atoms/selectors)
-  default: [], // default value (aka initial value)
-});
+// const userState = atom({
+//   key: 'userState', // unique ID (with respect to other atoms/selectors)
+//   default: [], // default value (aka initial value)
+// });
 function App(): React.JSX.Element {
-  const [users, setUsers] = useRecoilState(userState);
+  // const [users, setUsers] = useRecoilState(userState);
+  const [susers, setSUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       await fetch('https://dummyjson.com/users')
         .then(res => res.json())
-        .then(res => setUsers(res));
+        .then(res => {
+          setSUsers(res.users);
+        });
     };
     fetchData();
   }, []);
@@ -58,45 +61,47 @@ function App(): React.JSX.Element {
     setSelectedItems(newSelectedItems);
   };
 
-  const renderItem = ({item}) => (
-    <Pressable
-      style={[
-        styles.itemContainer,
-        selectedItems.includes(item.id) && styles.selectedItem,
-      ]}
-      onLongPress={() => handleLongPress(item.id)}>
-      <Text style={styles.itemText}>{item.text}</Text>
-      {selectedItems.length > 0 ? (
-        <CheckBox
-          value={selectedItems.includes(item.id) ? true : false}
-          onValueChange={() => onCheckBoxChanges(item.id)}
-        />
-      ) : null}
-    </Pressable>
-  );
+  const renderItem = ({item}) => {
+    return (
+      <Pressable
+        style={[
+          styles.itemContainer,
+          selectedItems.includes(item.id) && styles.selectedItem,
+        ]}
+        onLongPress={() => handleLongPress(item.id)}>
+        <Text style={styles.itemText}>{item.firstName}</Text>
+        {selectedItems.length > 0 ? (
+          <CheckBox
+            value={selectedItems.includes(item.id) ? true : false}
+            onValueChange={() => onCheckBoxChanges(item.id)}
+          />
+        ) : null}
+      </Pressable>
+    );
+  };
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <RecoilRoot>
-        <View style={styles.container}>
-          <FlatList
-            data={users}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-          />
-          {selectedItems.length > 0 ? (
-            <BottomSheet
-              ref={bottomSheetRef}
-              index={1}
-              snapPoints={snapPoints}
-              onChange={handleSheetChanges}>
-              <View style={styles.contentContainer}>
-                <Text>Awesome 🎉</Text>
-              </View>
-            </BottomSheet>
-          ) : null}
-        </View>
-      </RecoilRoot>
+      <View style={styles.container}>
+        <Text>Hello</Text>
+        <FlatList
+          style={{backgroundColor: 'green'}}
+          data={susers}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+        {selectedItems.length > 0 ? (
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}>
+            <View style={styles.contentContainer}>
+              <Text>Awesome 🎉</Text>
+            </View>
+          </BottomSheet>
+        ) : null}
+      </View>
     </GestureHandlerRootView>
   );
 }
@@ -120,15 +125,18 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 10,
+    backgroundColor: 'red',
   },
   itemContainer: {
+    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    backgroundColor: 'blue',
   },
   selectedItem: {
     backgroundColor: '#e0e0e0',
