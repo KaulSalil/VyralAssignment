@@ -92,42 +92,38 @@ function App(): React.JSX.Element {
   };
 
   const renderBottomSheetContents = () => {
-    console.log(`selectedItems:${JSON.stringify(selectedItems)}`);
-    if (selectedItems.length === 1) {
-      console.log(susers.find(item => item.id === selectedItems[0]).firstName);
-    } else {
-      console.log(
-        susers.find(item => item.id === selectedItems[0]).firstName +
-          '---' +
-          susers.find(item => item.id === selectedItems[1]).firstName,
-      );
+    switch (selectedItems.length) {
+      case 0:
+        return null;
+      case 1:
+        return (
+          <>
+            <Text>
+              {susers.find(item => item.id === selectedItems[0]).firstName}
+            </Text>
+            <Text>
+              {susers.find(item => item.id === selectedItems[0]).firstName}'s
+              Friends
+            </Text>
+          </>
+        );
+      default:
+        return (
+          <>
+            <Text>
+              {susers.find(item => item.id === selectedItems[0]).firstName},
+              {susers.find(item => item.id === selectedItems[1]).firstName},
+              {selectedItems.length > 2 ? selectedItems.length - 2 + '+' : null}
+            </Text>
+            <Text>Their Friends</Text>
+          </>
+        );
     }
-    return <Text>{selectedItems.length}</Text>;
-    // switch (selectedItems.length) {
-    //   case 0:
-    //     return (
-    //       <>
-    //         <Text>{susers[selectedItems[0]].firstName}</Text>
-    //         <Text>{susers[selectedItems[0]].firstName}+s Friends</Text>
-    //       </>
-    //     );
-    //   default:
-    //     return (
-    //       <>
-    //         <Text>
-    //           {susers[selectedItems[0].firstName]},
-    //           {susers[selectedItems[1].firstName]}
-    //         </Text>
-    //         <Text>Their Friends</Text>
-    //       </>
-    //     );
-    // }
   };
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <View style={styles.container}>
-        <Text>Hello</Text>
         <FlatList
           style={{backgroundColor: 'green'}}
           data={susers}
