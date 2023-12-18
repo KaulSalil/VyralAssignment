@@ -85,6 +85,9 @@ function App(): React.JSX.Element {
           <CheckBox
             value={selectedItems.includes(item.id) ? true : false}
             onValueChange={() => onCheckBoxChanges(item.id)}
+            tintColor="#6C63FF"
+            onCheckColor='"#6C63FF"'
+            tintColors={{true: '#6C63FF', false: '#6C63FF'}}
           />
         ) : null}
       </Pressable>
@@ -125,10 +128,10 @@ function App(): React.JSX.Element {
     <GestureHandlerRootView style={{flex: 1}}>
       <View style={styles.container}>
         <FlatList
-          style={{backgroundColor: 'green'}}
           data={susers}
           renderItem={renderItem}
           keyExtractor={item => item.id}
+          ListEmptyComponent={() => <Text>Data is Loading</Text>}
         />
         {selectedItems.length > 0 ? (
           <BottomSheet
@@ -137,7 +140,7 @@ function App(): React.JSX.Element {
             snapPoints={snapPoints}
             onChange={handleSheetChanges}>
             <View style={styles.contentContainer}>
-              <Text>Hang With</Text>
+              <Text style={{color: '#6C63FF', fontSize: 16}}>Hang With</Text>
               {renderBottomSheetContents()}
             </View>
           </BottomSheet>
@@ -167,9 +170,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 10,
-    backgroundColor: 'red',
+    paddingHorizontal: 10,
   },
   itemContainer: {
+    backgroundColor: 'white',
     height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -177,10 +181,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
-    backgroundColor: 'blue',
+    borderRadius: 20,
+    marginVertical: 5,
   },
   selectedItem: {
     backgroundColor: '#e0e0e0',
+    borderColor: '#6C63FF',
+    borderWidth: 3,
   },
   itemText: {
     fontSize: 18,
@@ -234,7 +241,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: 10,
   },
 });
 
