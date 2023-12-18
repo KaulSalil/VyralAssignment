@@ -7,9 +7,10 @@
 
 import CheckBox from '@react-native-community/checkbox';
 import React, {useState, useRef, useMemo, useCallback, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList, Pressable} from 'react-native';
+import {StyleSheet, Text, View, FlatList, Pressable, Image} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
+
 // import {
 //   RecoilRoot,
 //   atom,
@@ -69,7 +70,17 @@ function App(): React.JSX.Element {
           selectedItems.includes(item.id) && styles.selectedItem,
         ]}
         onLongPress={() => handleLongPress(item.id)}>
-        <Text style={styles.itemText}>{item.firstName}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Image
+            style={{height: 30, width: 30, borderRadius: 30 / 2}}
+            source={{uri: item.image}}
+          />
+          <View style={{flexDirection: 'column'}}>
+            <Text style={styles.itemText}>{item.firstName}</Text>
+            <Text style={styles.itemText}>{item.address.address}</Text>
+          </View>
+        </View>
+
         {selectedItems.length > 0 ? (
           <CheckBox
             value={selectedItems.includes(item.id) ? true : false}
