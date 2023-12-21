@@ -19,28 +19,28 @@ import {
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import BottomSheet from '@gorhom/bottom-sheet';
 
-// import {
-//   RecoilRoot,
-//   atom,
-//   selector,
-//   useRecoilState,
-//   useRecoilValue,
-// } from 'recoil';
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 
-// const userState = atom({
-//   key: 'userState', // unique ID (with respect to other atoms/selectors)
-//   default: [], // default value (aka initial value)
-// });
+const userState = atom({
+  key: 'userState', // unique ID (with respect to other atoms/selectors)
+  default: [], // default value (aka initial value)
+});
 function App(): React.JSX.Element {
-  // const [users, setUsers] = useRecoilState(userState);
-  const [susers, setSUsers] = useState([]);
+  const [users, setUsers] = useRecoilState(userState);
+  // const [susers, setSUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       await fetch('https://dummyjson.com/users')
         .then(res => res.json())
         .then(res => {
-          setSUsers(res.users);
+          setUsers(res.users);
         });
     };
     fetchData();
@@ -124,10 +124,10 @@ function App(): React.JSX.Element {
         return (
           <>
             <Text>
-              {susers.find(item => item.id === selectedItems[0]).firstName}
+              {users.find(item => item.id === selectedItems[0]).firstName}
             </Text>
             <Text>
-              {susers.find(item => item.id === selectedItems[0]).firstName}'s
+              {users.find(item => item.id === selectedItems[0]).firstName}'s
               Friends
             </Text>
           </>
@@ -136,8 +136,8 @@ function App(): React.JSX.Element {
         return (
           <>
             <Text>
-              {susers.find(item => item.id === selectedItems[0]).firstName},
-              {susers.find(item => item.id === selectedItems[1]).firstName},
+              {users.find(item => item.id === selectedItems[0]).firstName},
+              {users.find(item => item.id === selectedItems[1]).firstName},
               {selectedItems.length > 2 ? selectedItems.length - 2 + '+' : null}
             </Text>
             <Text>Their Friends</Text>
@@ -147,28 +147,30 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <View style={styles.container}>
-        <FlatList
-          data={susers}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          ListEmptyComponent={() => <Text>Data is Loading</Text>}
-        />
-        {selectedItems.length > 0 ? (
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}>
-            <View style={styles.contentContainer}>
-              <Text style={{color: '#6C63FF', fontSize: 16}}>Hang With</Text>
-              {renderBottomSheetContents()}
-            </View>
-          </BottomSheet>
-        ) : null}
-      </View>
-    </GestureHandlerRootView>
+    <RecoilRoot>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <View style={styles.container}>
+          <FlatList
+            data={users}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            ListEmptyComponent={() => <Text>Data is Loading</Text>}
+          />
+          {selectedItems.length > 0 ? (
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={1}
+              snapPoints={snapPoints}
+              onChange={handleSheetChanges}>
+              <View style={styles.contentContainer}>
+                <Text style={{color: '#6C63FF', fontSize: 16}}>Hang With</Text>
+                {renderBottomSheetContents()}
+              </View>
+            </BottomSheet>
+          ) : null}
+        </View>
+      </GestureHandlerRootView>
+    </RecoilRoot>
   );
 }
 
